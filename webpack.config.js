@@ -1,40 +1,54 @@
 let path = require("path");
 let HtmlWebpackPlugin = require("html-webpack-plugin");
 let CleanWebpackPlugin = require("clean-webpack-plugin");
-let webpack = require("webpack");
 
 module.exports = {
+    mode: "development",
     entry: ["./src/a.js"],
     output: {
-        filename: "build.[hash:8].js",
-        path: path.resolve("./build")
+        filename: "bundle.[hash:8].js",
+        path: path.resolve(__dirname, "./bundle")
     },
     devServer: {
-        contentBase: './build',
-        port: 3001,
+        contentBase: './bundle',
+        port: 2000,
         compress: true,
         open: true,
-        hot: true
-    },
-    module: {
-        rules: [{test: '/\.css$/', use: [{loader: 'style-loader'}, {loader: 'css-loader'}]}]
+        // hot: true
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
         new CleanWebpackPlugin(
-            ['./build']
+            ['./bundle']
         ),
         new HtmlWebpackPlugin({
             template: "./src/index.html",
-            minify: {
-                "removeAttributeQuotes": "true",
-                "removeComments": "true",
-                "removeEmptyAttributes": "true",
-                "collapseWhitespace": true
-            },
+            filename: "index.html",
+            // minify: {
+            //     "removeAttributeQuotes": "true",
+            //     "removeComments": "true",
+            //     "removeEmptyAttributes": "true",
+            //     "collapseWhitespace": true
+            // },
             hash: true
         })
     ],
+    module: {
+        rules: [
+            {
+                test: /.css$/,
+                use:
+                    [
+                        {
+                            loader: "style-loader",
+                            options: {
+                                insertAt: 'top'
+                            }
+                        },
+                        'css-loader'
+                    ]
+            },
+        ]
+    },
     resolve: {},
-    mode: "development"
+
 };
