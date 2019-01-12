@@ -2,9 +2,23 @@ let path = require("path");
 let HtmlWebpackPlugin = require("html-webpack-plugin");
 let CleanWebpackPlugin = require("clean-webpack-plugin");
 let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+let OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+let UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-    mode: "development",
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin(
+                {
+                    cache: true,
+                    parallel: true,
+                    sourceMap: true
+                }
+            ),
+            new OptimizeCSSAssetsPlugin()
+        ]
+    },
+    mode: "production",
     entry: ["./src/a.js"],
     output: {
         filename: "bundle.[hash:8].js",
