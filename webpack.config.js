@@ -1,6 +1,7 @@
 let path = require("path");
 let HtmlWebpackPlugin = require("html-webpack-plugin");
 let CleanWebpackPlugin = require("clean-webpack-plugin");
+let MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     mode: "development",
@@ -30,7 +31,12 @@ module.exports = {
             //     "collapseWhitespace": true
             // },
             hash: true
-        })
+        }),
+        new MiniCssExtractPlugin(
+            {
+                filename: 'main.css'
+            }
+        )
     ],
     module: {
         rules: [
@@ -38,20 +44,24 @@ module.exports = {
                 test: /.css$/,
                 use:
                     [
-                        {
-                            loader: "style-loader",
-                            options: {
-                                insertAt: 'top'
-                            }
-                        },
-                        'css-loader'
+                        // {
+                        //     loader: "style-loader",
+                        //     options: {
+                        //         insertAt: 'top'
+                        //     }
+                        // },
+                        MiniCssExtractPlugin.loader,
+                        'css-loader',
+                        'postcss-loader'
                     ]
             },
             {
                 test: /\.less$/,
                 use: [
-                    {loader: "style-loader"},
+                    // {loader: "style-loader"},
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
+                    'postcss-loader',
                     'less-loader'
                 ]
             }
